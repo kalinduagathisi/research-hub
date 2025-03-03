@@ -1,22 +1,30 @@
 package com.kaw.research_hub;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 import java.util.List;
 
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true) // ignore all unknown properties than listed here
 public class GeminiResponse {
-    private List<Candidate> candidateList;
+    private List<Candidate> candidates;
 
-    private static class Candidate {
+    @Data
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class Candidate {
         private Content content;
     }
 
-    private static class Content {
+    @Data
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class Content {
         private List<Part> parts;
     }
 
-    private static class Part {
+    @Data
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class Part {
         private String text;
     }
 }

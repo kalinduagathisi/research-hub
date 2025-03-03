@@ -1,5 +1,6 @@
 package com.kaw.research_hub;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -16,9 +17,11 @@ public class ResearchService {
     private String geminiAPIUrl;
 
     private final WebClient webClient;
+    private final ObjectMapper objectMapper;
 
-    public ResearchService(WebClient.Builder webClientBuilder) {
+    public ResearchService(WebClient.Builder webClientBuilder, ObjectMapper objectMapper) {
         this.webClient = webClientBuilder.build();
+        this.objectMapper = objectMapper;
     }
 
     public String processContent(ResearchRequest researchRequest) {
@@ -47,7 +50,7 @@ public class ResearchService {
 
     private String extractTextFromResponse(String response) {
         try {
-
+            GeminiResponse geminiResponse = objectMapper.readValue(response, GeminiResponse.class);
         } catch (Exception e) {
             return "Error Parsing: " + e.getMessage();
         }

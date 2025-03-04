@@ -30,7 +30,7 @@ public class ResearchService {
 
         // query the AI model API
         Map<String, Object> requestBody = Map.of(
-                "contents", new Object[] {
+                "content", new Object[] {
                         Map.of("parts", new Object[] {
                                 Map.of("text", prompt)
                         })
@@ -51,6 +51,15 @@ public class ResearchService {
     private String extractTextFromResponse(String response) {
         try {
             GeminiResponse geminiResponse = objectMapper.readValue(response, GeminiResponse.class);
+            if (geminiResponse.getCandidates() != null && !geminiResponse.getCandidates().isEmpty()) {
+                 GeminiResponse.Candidate firstCandidate = geminiResponse.getCandidates().get(0);
+                 if (firstCandidate.getContent() != null &&
+                 firstCandidate.getContent().getParts() != null &&
+                         !firstCandidate.getContent().getParts().isEmpty()) {
+                     return firstCandidate.getContent().getParts().get(0).getText();
+                 }
+            }
+            return "No content found in response";
         } catch (Exception e) {
             return "Error Parsing: " + e.getMessage();
         }
@@ -66,7 +75,7 @@ public class ResearchService {
                 prompt.append("Based on the following content, suggest related topics and further reading. Format the response with clear headings and bullet points:\n\n");
                 break;
             default:
-                throw new IllegalArgumentException("Unkown Operation: " + researchRequest.getOperation());
+                throw new IllegalArgumentException("Unknown Operation: " + researchRequest.getOperation());
         }
         prompt.append(researchRequest.getContent());
         return prompt.toString();

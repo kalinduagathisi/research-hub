@@ -30,7 +30,7 @@ public class ResearchService {
 
         // query the AI model API
         Map<String, Object> requestBody = Map.of(
-                "content", new Object[] {
+                "contents", new Object[] {
                         Map.of("parts", new Object[] {
                                 Map.of("text", prompt)
                         })
@@ -68,7 +68,7 @@ public class ResearchService {
     private String buildPrompt(ResearchRequest researchRequest) {
         StringBuilder prompt = new StringBuilder();
         switch (researchRequest.getOperation()) {
-            case "summarize:":
+            case "summarize":
                 prompt.append("Provide a clear and concise summery of the following text in few sentences:\n\n");
                 break;
             case "suggest":
